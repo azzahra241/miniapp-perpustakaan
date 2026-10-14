@@ -1,5 +1,5 @@
-# Pustaka Cendekia: Sistem Sirkulasi Perpustakaan
-### Proyek Integrasi Pertemuan 1–7 | Pemrograman Berbasis Web (Kelas B)
+# Pustaka Cendekia
+### Pemrograman Berbasis Web (Kelas B)
 
 Aplikasi web PHP ini mengintegrasikan seluruh materi perkuliahan Pertemuan 1 sampai 7: paradigma pemrograman PHP, logika prosedural, class dan object, variabel dan tipe data, operator, manipulasi teks, serta struktur kontrol perulangan while, do-while, dan for.
 
@@ -7,21 +7,21 @@ Aplikasi web PHP ini mengintegrasikan seluruh materi perkuliahan Pertemuan 1 sam
 
 ## Profil Kelompok dan Pembagian Tugas
 
-**Kelompok 7, Pemrograman Berbasis Web Kelas B**
+**Kelompok 7**
 
-| No | Nama Mahasiswa | NPM | Peran Kelompok (Sesuai Slide 4) | Tanggung Jawab Utama |
+| No | Nama Mahasiswa | NPM | Peran Kelompok | Tanggung Jawab |
 |---|---|---|---|---|
-| 1 | Alfin Romi Setiawan | 4524210009 | Koordinator / System Analyst | Menyusun alur sistem, mengintegrasikan antarmuka dan modul, memastikan seluruh syarat P1–P7 terpenuhi. |
-| 2 | Alifian Revan Arnanta | 4524210010 | PHP Developer A | Menulis logika prosedural (`functions.php`), fungsi perhitungan denda, sanitasi keamanan teks, dan penanganan input. |
-| 3 | Az-Zahra Putri | 4524210018 | PHP Developer B | Menulis class OOP `Buku` (`classes/Buku.php`), struktur perulangan for, dan tabel laporan (`laporan.php`). |
-| 4 | Rakha Hafidz Fauzan | 4524210080 | Tester & Dokumentasi | Menyiapkan skenario uji (`uji-functions.php`), memeriksa keabsahan kalkulasi, dan menyusun dokumentasi. |
-| 5 | Putri Wahyu Dwi Nurfatimah | 4524210082 | Presenter / UI Integrator | Merancang tata letak antarmuka (`assets/css/style.css`), navigasi, dashboard, dan demo aplikasi. |
+| 1 | Alfin Romi Setiawan | 4524210009 | Tester & Dokumentasi | Memeriksa keabsahan kalkulasi, menyusun dokumentasi, dan halaman formulir transaksi, pencarian, dan simulasi sirkulasi (`proses.php`) |
+| 2 | Alifian Revan Arnanta | 4524210010 | Presenter / UI Integrator | Merancang tata letak antarmuka (`assets/css/style.css`), navigasi, dashboard, dan demo aplikasi. |
+| 3 | Az-Zahra Putri | 4524210018 | PHP Developer A | Menulis logika prosedural (`functions.php`), fungsi perhitungan denda, sanitasi keamanan teks, dan penanganan input, dan data array koleksi buku perpustakaan (`data/sample.php`) |
+| 4 | Rakha Hafidz Fauzan | 4524210080 | Koordinator / System Analyst | Menyusun alur sistem, mengintegrasikan antarmuka dan modul, memastikan seluruh syarat P1–P7 terpenuhi, dan halaman utama, ringkasan metrik, dan navigasi (`index.php`) |
+| 5 | Putri Wahyu Dwi Nurfatimah | 4524210082 | PHP Developer B | Menulis class OOP `Buku` (`classes/Buku.php`), struktur perulangan for, dan tabel laporan (`laporan.php`). |
 
 ---
 
 ## Matriks Pemenuhan Syarat Wajib (Pertemuan 1–7)
 
-Rincian pemenuhan checklist tugas berdasarkan Slide 10:
+Rincian pemenuhan checklist tugas:
 
 | Pertemuan | Syarat Wajib di Slide | Bukti Implementasi | Lokasi Berkas dan Baris Kode |
 |---|---|---|---|
@@ -35,33 +35,24 @@ Rincian pemenuhan checklist tugas berdasarkan Slide 10:
 
 ---
 
-## Susunan Berkas Proyek (Sesuai Slide 11)
+## Susunan Berkas Proyek
 
 ```text
 miniapp-perpustakaan/
-├── index.php             # Halaman utama, ringkasan metrik, dan tabel matriks syarat
-├── proses.php            # Halaman proses sirkulasi: pencarian while, kalkulator denda, simulasi do-while
-├── laporan.php           # Halaman laporan: tabel koleksi OOP, visualisasi unit rak bertingkat (nested for)
-├── functions.php         # Kumpulan fungsi prosedural, konstanta, sanitasi teks, dan kalkulasi
-├── uji-functions.php     # Pengujian unit mandiri untuk memeriksa fungsi dan perulangan
-├── README.md             # Dokumentasi proyek, susunan tim, dan panduan menjalankan
+├── index.php            
+├── proses.php            
+├── laporan.php           
+├── functions.php             
+├── README.md             
 ├── classes/
-│   └── Buku.php          # Definisi Class OOP Buku dengan properti dan method objek
+│   └── Buku.php          
 ├── data/
-│   └── sample.php        # Kumpulan data 12 buku dan inisialisasi objek Buku
+│   └── sample.php        
 └── assets/
     ├── css/
-    │   └── style.css     # Tata letak visual editorial dan format media cetak
-    └── images/           # Direktori aset gambar
+    │   └── style.css     
+    └── images/        
 ```
-
----
-
-## Hubungan dengan Folder TUGAS_UTS
-
-1. Kedua folder menggunakan Class `Buku` yang identik. Properti `kodeBuku`, `status`, dan `hariTerlambat` pada berkas lama tetap berfungsi normal, berdampingan dengan properti katalog baru seperti `pengarang`, `tahun`, `rating`, dan `kategori`.
-2. Berkas `data/sample.php` dapat dipanggil sebagai array biasa maupun menyediakan array objek `$daftarBuku` untuk kebutuhan modul Developer B.
-3. Seluruh alur dapat diakses dari kedua folder melalui browser tanpa kendala tautan terputus.
 
 ---
 
@@ -74,16 +65,12 @@ miniapp-perpustakaan/
    * Beranda: `http://localhost/pemrograman-berbasis-web/miniapp-perpustakaan/index.php`
    * Transaksi: `http://localhost/pemrograman-berbasis-web/miniapp-perpustakaan/proses.php`
    * Laporan: `http://localhost/pemrograman-berbasis-web/miniapp-perpustakaan/laporan.php`
-   * Pengujian: `http://localhost/pemrograman-berbasis-web/miniapp-perpustakaan/uji-functions.php`
-   * Modul Developer B: `http://localhost/pemrograman-berbasis-web/TUGAS_UTS/developer-b.php`
 
 ---
 
 ## Catatan Kendala dan Solusi Teknis
 
-1. **Penyesuaian Struktur Antara Anggota Tim**
-   Kode awal pada `miniapp-perpustakaan` memakai array asosiatif murni, sedangkan `TUGAS_UTS` menggunakan class dengan penamaan properti `kodeBuku`. Solusinya, constructor `Buku` dibuat fleksibel untuk mengisi `kode` dan `kodeBuku` sekaligus, serta menambahkan method `fromArray()`.
-2. **Plafon Sanksi Keterlambatan**
+1. **Plafon Sanksi Keterlambatan**
    Keterlambatan dalam durasi panjang berpotensi menimbulkan nilai denda tidak wajar. Kami menetapkan konstanta `DENDA_MAKSIMAL = 50000` dengan operator ternary pembanding, sehingga hasil perhitungan selalu berada dalam batas aturan perpustakaan.
-3. **Pencegahan Celah Keamanan XSS**
+2. **Pencegahan Celah Keamanan XSS**
    Data dari formulir dan katalog berisiko disisipi skrip jahat bila dicetak langsung. Seluruh output teks dilewatkan melalui fungsi `amankanTeks()` yang memanggil `htmlspecialchars($teks, ENT_QUOTES, 'UTF-8')`.

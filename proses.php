@@ -261,13 +261,6 @@ if (isset($_POST['aksi']) && $_POST['aksi'] === 'simulasi_antrean') {
                                 </div>
                             </div>
 
-                            <div class="field-group" style="display: flex; align-items: center; gap: 8px;">
-                                <input type="checkbox" id="member_vip" name="member_vip" value="1" checked style="width: 16px; height: 16px;">
-                                <label for="member_vip" style="font-size: 13px; cursor: pointer;">
-                                    Member terdaftar / Mahasiswa aktif (potongan denda 20%)
-                                </label>
-                            </div>
-
                             <button type="submit" class="btn btn-dark" style="width: 100%;">
                                 Hitung Denda & Buat Bukti Pengembalian
                             </button>
@@ -310,10 +303,6 @@ if (isset($_POST['aksi']) && $_POST['aksi'] === 'simulasi_antrean') {
                                     <tr>
                                         <td>Denda Kotor (<?= $strukTransaksi['hari_terlambat'] ?> hari &times; <?= formatRupiah($strukTransaksi['tarif_per_hari']) ?>)</td>
                                         <td><?= formatRupiah($strukTransaksi['denda_dasar']) ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Potongan Diskon Member (<?= $strukTransaksi['persen_diskon'] ?>%)</td>
-                                        <td style="color: #065f46;">- <?= formatRupiah($strukTransaksi['potongan_diskon']) ?></td>
                                     </tr>
                                     <tr class="receipt-total">
                                         <td>Total Biaya Denda</td>

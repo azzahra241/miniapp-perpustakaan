@@ -15,7 +15,7 @@ $koleksiBuku = [
         'tahun'          => 2023,
         'rating'         => 4.8,
         'kategori'       => 'Teknologi & Komputer',
-        'status'         => 'Dipinjam', // Dapat diubah ke 'Tersedia', 'Dipinjam', atau 'Terlambat'
+        'status'         => 'Tersedia', // Dapat diubah ke 'Tersedia', 'Dipinjam', atau 'Terlambat'
         'hari_terlambat' => 3,
         'stok'           => 3,
     ],

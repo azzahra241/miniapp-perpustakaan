@@ -21,14 +21,14 @@ if (!defined('NAMA_PERPUSTAKAAN')) {
     define('NAMA_PERPUSTAKAAN', 'Pustaka Cendekia');
 }
 if (!defined('nama_perpustakaan')) {
-    define('nama_perpustakaan', NAMA_PERPUSTAKAAN); // Kompatibilitas kode lama
+    define('nama_perpustakaan', NAMA_PERPUSTAKAAN);
 }
 if (!defined('VERSI_APLIKASI')) {
     define('VERSI_APLIKASI', '1.0.0-UTS');
 }
 
 const DENDA_PER_HARI    = 1000;   // Biaya denda standar per hari keterlambatan (int)
-const denda_per_hari    = DENDA_PER_HARI; // Kompatibilitas kode lama
+const denda_per_hari    = DENDA_PER_HARI;
 const DENDA_MAKSIMAL    = 50000;  // Batas plafon denda maksimal per buku (int)
 const denda_maksimal    = DENDA_MAKSIMAL;
 const BATAS_PINJAM_HARI = 7;      // Masa peminjaman standar dalam hari (int)
@@ -41,7 +41,6 @@ const TARIF_ADMIN_PROSES = 2500.50; // Biaya administrasi perpanjangan (float)
 
 /**
  * [P4 - String Teknik 1 & 2] Membersihkan dan menormalisasi format teks judul
- * Menggunakan trim(), preg_replace(), strtolower(), ucwords()
  */
 function normalisasiJudul(string $judul): string
 {
@@ -52,7 +51,6 @@ function normalisasiJudul(string $judul): string
 
 /**
  * [P4 - String Teknik 3] Format kode standar buku perpustakaan (contoh: BK007)
- * Menggunakan str_pad() dan casting string
  */
 function formatKodeBuku(int $nomor): string
 {
@@ -60,8 +58,7 @@ function formatKodeBuku(int $nomor): string
 }
 
 /**
- * [P4 - String Teknik 4] Pengamanan teks dari celah keamanan XSS (Cross Site Scripting)
- * Menggunakan htmlspecialchars()
+ * [P4 - String Teknik 4] Pengamanan teks dari celah keamanan XSS
  */
 function amankanTeks(string $teks): string
 {
@@ -70,7 +67,6 @@ function amankanTeks(string $teks): string
 
 /**
  * [P4 - String Teknik 5] Memformat angka ke dalam notasi mata uang Rupiah
- * Menggunakan number_format()
  */
 function formatRupiah(int|float $angka): string
 {
@@ -79,25 +75,27 @@ function formatRupiah(int|float $angka): string
 
 /**
  * [P2, P3, P4] Menghitung denda berdasarkan hari keterlambatan
- * Menggunakan operator perbandingan, aritmatika, dan ternary
  */
 function hitungDenda(int $hariTerlambat, int $tarif = DENDA_PER_HARI): int
 {
     if ($hariTerlambat <= 0) {
         return 0;
     }
-    // [P4] Operator Aritmatika (*)
     $denda = $hariTerlambat * $tarif;
-    // [P4] Operator Ternary (? :) dan Perbandingan (>)
     return $denda > DENDA_MAKSIMAL ? DENDA_MAKSIMAL : $denda;
 }
 
 /**
  * [P4] Menentukan teks status peminjaman buku
- * Menggunakan operator logika (!), perbandingan (>), dan ternary
  */
-function tentukanStatusPinjam(bool $dipinjam, int $hariTerlambat): string
+function tentukanStatusPinjam(bool $dipinjam, int $hariTerlambat, ?string $statusManual = null): string
 {
+    if ($statusManual !== null && $statusManual !== '') {
+        $st = ucfirst(strtolower(trim($statusManual)));
+        if (in_array($st, ['Tersedia', 'Dipinjam', 'Terlambat'])) {
+            return $st;
+        }
+    }
     if (!$dipinjam) {
         return 'Tersedia';
     }
@@ -106,15 +104,14 @@ function tentukanStatusPinjam(bool $dipinjam, int $hariTerlambat): string
 
 /**
  * [P3 & P4] Menghitung konversi durasi keterlambatan ke satuan minggu dan hari
- * Menggunakan fungsi aritmatika intdiv() dan modulo (%)
  */
 function hitungKeterlambatan(int $hari): string
 {
     if ($hari <= 0) {
         return 'Tepat Waktu (0 hari)';
     }
-    $minggu = intdiv($hari, 7); // Pembagian bilangan bulat
-    $sisa   = $hari % 7;        // Sisa bagi hari
+    $minggu = intdiv($hari, 7);
+    $sisa   = $hari % 7;
     return "{$minggu} minggu {$sisa} hari ({$hari} hari)";
 }
 
@@ -132,7 +129,6 @@ function ambilHariTerlambat(mixed $input): int
 
 /**
  * [P5 - WHILE 1] Mencari buku dalam daftar array berdasarkan kode buku
- * Perulangan berhenti saat buku ditemukan atau mencapai akhir array
  */
 function cariBukuByKode(array $daftar, string $kode): ?array
 {
@@ -141,12 +137,11 @@ function cariBukuByKode(array $daftar, string $kode): ?array
     $jumlahData = count($daftar);
     $hasil      = null;
 
-    // [P5] While loop mencari hingga target ditemukan
     while ($i < $jumlahData) {
         $kodeBuku = strtoupper($daftar[$i]['kode'] ?? $daftar[$i]['kodeBuku'] ?? '');
         if ($kodeBuku === $kodeTarget) {
             $hasil = $daftar[$i];
-            break; // Hentikan loop segera setelah ditemukan
+            break;
         }
         $i++;
     }
@@ -155,7 +150,6 @@ function cariBukuByKode(array $daftar, string $kode): ?array
 
 /**
  * [P5 - WHILE 2 & P4 - String Teknik 6] Mencari buku berdasarkan keyword judul
- * Menggunakan while loop dan fungsi string str_contains / stripos
  */
 function cariBukuByJudul(array $daftar, string $keyword): array
 {
@@ -168,10 +162,8 @@ function cariBukuByJudul(array $daftar, string $keyword): array
     $i          = 0;
     $jumlahData = count($daftar);
 
-    // [P5] While loop iterasi data array
     while ($i < $jumlahData) {
         $judulBuku = strtolower($daftar[$i]['judul'] ?? '');
-        // [P4] Teknik manipulasi string str_contains
         if (str_contains($judulBuku, $keyword)) {
             $hasil[] = $daftar[$i];
         }
@@ -181,16 +173,14 @@ function cariBukuByJudul(array $daftar, string $keyword): array
 }
 
 /**
- * [P5 - WHILE 3] Simulasi pemrosesan antrean pengembalian buku (Queue Processing)
- * Menjalankan proses antrean selama kondisi array antrean masih memiliki elemen
+ * [P5 - WHILE 3] Simulasi pemrosesan antrean pengembalian buku
  */
 function prosesAntreanPengembalian(array $antrean): array
 {
     $logProses = [];
-    $antreanSalinan = $antrean; // Duplikasi array antrean
+    $antreanSalinan = $antrean;
 
     while (!empty($antreanSalinan)) {
-        // Ambil elemen pertama antrean
         $item = array_shift($antreanSalinan);
         $denda = hitungDenda((int)($item['hari_terlambat'] ?? 0));
         $logProses[] = [
@@ -209,8 +199,72 @@ function prosesAntreanPengembalian(array $antrean): array
 // =========================================================================
 
 /**
- * [P6 - DO-WHILE] Simulasi eksekusi siklus menu transaksi perpustakaan
- * Struktur DO-WHILE menjamin minimal satu siklus menu dieksekusi sebelum evaluasi terminasi
+ * [P6 - DO-WHILE] Eksekusi menu transaksi terstruktur
+ */
+function eksekusiMenuSirkulasi(array $daftar, int $pilihan): array
+{
+    $hasil = [];
+    $iterasi = 0;
+
+    do {
+        if ($pilihan === 1) {
+            $jumlahTersedia = hitungJumlahTersedia($daftar);
+            $totalBuku = count($daftar);
+            $hasil = [
+                'judul'      => 'Hasil Audit Ketersediaan Rak',
+                'deskripsi'  => 'Status ketersediaan buku fisik yang siap dipinjam:',
+                'data'       => [
+                    'Buku Siap Pinjam'   => $jumlahTersedia . ' Judul',
+                    'Buku Dalam Pinjaman'=> ($totalBuku - $jumlahTersedia) . ' Judul',
+                    'Total Katalog'      => $totalBuku . ' Judul',
+                ],
+                'status'     => 'Katalog siap melayani peminjaman anggota perpustakaan.',
+                'badge'      => 'tag-ready'
+            ];
+        } elseif ($pilihan === 2) {
+            $totalDenda = hitungTotalDenda($daftar);
+            $hasil = [
+                'judul'      => 'Rekapitulasi Sanksi Keterlambatan',
+                'deskripsi'  => 'Ringkasan akumulasi denda sirkulasi yang belum diselesaikan:',
+                'data'       => [
+                    'Total Akumulasi Denda' => formatRupiah($totalDenda),
+                    'Tarif Denda Harian'    => formatRupiah(DENDA_PER_HARI) . ' / hari',
+                    'Plafon Maksimal Buku'  => formatRupiah(DENDA_MAKSIMAL),
+                ],
+                'status'     => $totalDenda > 0 ? 'Terdapat sanksi denda aktif dalam sirkulasi.' : 'Tidak ada tunggakan denda keterlambatan.',
+                'badge'      => $totalDenda > 0 ? 'tag-late' : 'tag-ready'
+            ];
+        } elseif ($pilihan === 3) {
+            $dipinjamList = [];
+            foreach ($daftar as $item) {
+                $st = ucfirst(strtolower(trim($item['status'] ?? '')));
+                if ($st !== 'Tersedia') {
+                    $dipinjamList[] = ($item['kode'] ?? '') . ' - ' . ($item['judul'] ?? '') . ' (' . $st . ')';
+                }
+            }
+            $hasil = [
+                'judul'      => 'Verifikasi Sirkulasi Aktif',
+                'deskripsi'  => 'Daftar koleksi buku yang saat ini tercatat dalam peminjaman:',
+                'list'       => $dipinjamList,
+                'status'     => count($dipinjamList) . ' transaksi sirkulasi aktif telah diverifikasi.',
+                'badge'      => 'tag-borrowed'
+            ];
+        } else {
+            $hasil = [
+                'judul'      => 'Penutupan Sesi Layanan',
+                'deskripsi'  => 'Sesi transaksi sirkulasi perpustakaan telah ditutup dengan aman.',
+                'status'     => 'Sistem kembali ke status siaga.',
+                'badge'      => 'tag-neutral'
+            ];
+        }
+        $iterasi++;
+    } while ($iterasi < 1); // Minimal 1 kali eksekusi
+
+    return $hasil;
+}
+
+/**
+ * Kompatibilitas fungsi simulasiMenuTransaksi lama
  */
 function simulasiMenuTransaksi(array $daftar, array $inputSimulasi): array
 {
@@ -219,21 +273,17 @@ function simulasiMenuTransaksi(array $daftar, array $inputSimulasi): array
 
     do {
         $pilihan = $inputSimulasi[$urutan] ?? 0;
-
         if ($pilihan === 1) {
-            $jumlahTersedia = hitungJumlahTersedia($daftar);
-            $log[] = "[Menu 1] Audit Ketersediaan: Terdapat {$jumlahTersedia} judul buku siap dipinjam.";
+            $log[] = 'Audit Ketersediaan: Terdapat ' . hitungJumlahTersedia($daftar) . ' judul buku siap dipinjam.';
         } elseif ($pilihan === 2) {
-            $totalDenda = hitungTotalDenda($daftar);
-            $log[] = '[Menu 2] Rekap Denda: Total akumulasi denda berjalan adalah ' . formatRupiah($totalDenda) . '.';
+            $log[] = 'Rekap Denda: Total akumulasi denda adalah ' . formatRupiah(hitungTotalDenda($daftar)) . '.';
         } elseif ($pilihan === 3) {
-            $log[] = '[Menu 3] Verifikasi Sirkulasi: Seluruh status buku aktif telah disinkronkan.';
+            $log[] = 'Verifikasi Sirkulasi: Seluruh status buku aktif telah disinkronkan.';
         } elseif ($pilihan === 0) {
-            $log[] = '[Menu 0] Selesai: Sesi menu transaksi berhasil ditutup secara aman.';
+            $log[] = 'Selesai: Sesi transaksi sirkulasi berhasil ditutup.';
         } else {
-            $log[] = "[Menu Invalid] Pilihan {$pilihan} tidak dikenali oleh sistem.";
+            $log[] = "Pilihan {$pilihan} tidak dikenali.";
         }
-
         $urutan++;
     } while ($pilihan !== 0 && $urutan < count($inputSimulasi));
 
@@ -245,14 +295,17 @@ function simulasiMenuTransaksi(array $daftar, array $inputSimulasi): array
 // =========================================================================
 
 /**
- * Menghitung total seluruh denda dalam koleksi buku menggunakan while / for
+ * Menghitung total seluruh denda dalam koleksi buku
  */
 function hitungTotalDenda(array $daftar): int
 {
     $total = 0;
-    $jumlah = count($daftar);
-    for ($i = 0; $i < $jumlah; $i++) {
-        $hari = (int) ($daftar[$i]['hari_terlambat'] ?? ($daftar[$i]['hariTerlambat'] ?? 0));
+    foreach ($daftar as $buku) {
+        $st = ucfirst(strtolower(trim($buku['status'] ?? '')));
+        if ($st === 'Tersedia') {
+            continue; // Buku berstatus Tersedia tidak dikenakan denda
+        }
+        $hari = (int) ($buku['hari_terlambat'] ?? ($buku['hariTerlambat'] ?? 0));
         $total += hitungDenda($hari);
     }
     return $total;
@@ -264,15 +317,11 @@ function hitungTotalDenda(array $daftar): int
 function hitungJumlahTersedia(array $daftar): int
 {
     $jumlahTersedia = 0;
-    $total = count($daftar);
-    for ($i = 0; $i < $total; $i++) {
-        $isDipinjam = false;
-        if (isset($daftar[$i]['dipinjam'])) {
-            $isDipinjam = (bool) $daftar[$i]['dipinjam'];
-        } elseif (isset($daftar[$i]['status'])) {
-            $isDipinjam = strtolower($daftar[$i]['status']) !== 'tersedia';
-        }
-        if (!$isDipinjam) {
+    foreach ($daftar as $buku) {
+        $st = ucfirst(strtolower(trim($buku['status'] ?? '')));
+        if ($st === 'Tersedia') {
+            $jumlahTersedia++;
+        } elseif ($st === '' && empty($buku['dipinjam'])) {
             $jumlahTersedia++;
         }
     }
@@ -286,7 +335,6 @@ function muatObjekBuku(array $dataArray): array
 {
     $objekBuku = [];
     $total = count($dataArray);
-    // [P7] Perulangan FOR untuk membentuk array objek
     for ($i = 0; $i < $total; $i++) {
         $objekBuku[] = Buku::fromArray($dataArray[$i]);
     }

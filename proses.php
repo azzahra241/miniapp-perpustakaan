@@ -18,7 +18,7 @@ $keywordCari        = '';
 $hasilPencarian     = null;
 $jenisPencarian     = '';
 $strukTransaksi     = null;
-$logMenuDoWhile     = null;
+$hasilMenu          = null;
 $logAntreanWhile    = null;
 
 // [P4 & P5] Pencarian data buku menggunakan perulangan while
@@ -84,10 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi']) && $_POST['ak
     }
 }
 
-// [P6] Simulasi alur menu transaksi menggunakan perulangan do-while
+// [P6] Eksekusi menu sirkulasi menggunakan perulangan do-while
 if (isset($_POST['aksi']) && $_POST['aksi'] === 'simulasi_dowhile') {
-    $menuDipilih = [(int)($_POST['menu_pilihan'] ?? 1), 0];
-    $logMenuDoWhile = simulasiMenuTransaksi($koleksiBuku, $menuDipilih);
+    $pilihan = (int)($_POST['menu_pilihan'] ?? 1);
+    $hasilMenu = eksekusiMenuSirkulasi($koleksiBuku, $pilihan);
 }
 
 // [P5] Pemrosesan antrean pengembalian menggunakan perulangan while
@@ -130,7 +130,7 @@ if (isset($_POST['aksi']) && $_POST['aksi'] === 'simulasi_antrean') {
         <div class="container">
             <h1>Pemrosesan Sirkulasi dan Transaksi</h1>
             <p>
-                Layanan pencarian katalog, kalkulator denda keterlambatan sirkulasi, simulasi menu transaksi, dan pemrosesan antrean pengembalian buku.
+                Layanan pencarian katalog, kalkulator denda keterlambatan sirkulasi, menu layanan transaksi, dan pemrosesan antrean pengembalian buku.
             </p>
         </div>
     </section>
@@ -335,37 +335,54 @@ if (isset($_POST['aksi']) && $_POST['aksi'] === 'simulasi_antrean') {
             </div>
         </section>
 
-        <!-- 3. Simulasi Menu Transaksi -->
+        <!-- 3. Simulasi Menu Transaksi (DO-WHILE) -->
         <section class="panel">
             <div class="panel-header">
-                <span class="panel-title">Simulasi Menu Transaksi</span>
+                <span class="panel-title">Menu Transaksi Sirkulasi</span>
             </div>
             <div class="panel-body">
                 <form action="proses.php" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 14px;">
                     <input type="hidden" name="aksi" value="simulasi_dowhile">
                     <div style="flex: 1; min-width: 260px;">
-                        <label class="field-label" for="menu_pilihan">Pilihan opsi menu</label>
+                        <label class="field-label" for="menu_pilihan">Pilihan opsi layanan sirkulasi</label>
                         <select id="menu_pilihan" name="menu_pilihan" class="field-select">
-                            <option value="1">Menu 1: Audit ketersediaan buku di rak</option>
-                            <option value="2">Menu 2: Rekapitulasi total denda berjalan</option>
-                            <option value="3">Menu 3: Verifikasi sinkronisasi sirkulasi</option>
-                            <option value="0">Menu 0: Langsung keluar sesi</option>
+                            <option value="1">Audit ketersediaan buku di rak</option>
+                            <option value="2">Rekapitulasi total sanksi denda berjalan</option>
+                            <option value="3">Daftar buku dalam peminjaman aktif</option>
+                            <option value="0">Tutup sesi layanan sirkulasi</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-secondary">
-                        Jalankan Siklus Menu
+                        Jalankan Menu Layanan
                     </button>
                 </form>
 
-                <?php if ($logMenuDoWhile): ?>
-                    <div class="log-box">
-                        <pre><?php
-echo "Siklus menu transaksi berhasil dijalankan:\n";
-foreach ($logMenuDoWhile as $barisLog) {
-    echo amankanTeks($barisLog) . "\n";
-}
-echo "Sesi transaksi selesai.";
-                        ?></pre>
+                <?php if ($hasilMenu): ?>
+                    <div style="background: #ffffff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin-top: 14px; box-shadow: var(--shadow-sm);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--line-subtle); padding-bottom: 8px;">
+                            <strong style="font-size: 14.5px; color: var(--ink-primary);"><?= amankanTeks($hasilMenu['judul']) ?></strong>
+                            <span class="tag-status <?= $hasilMenu['badge'] ?>"><?= amankanTeks($hasilMenu['status']) ?></span>
+                        </div>
+                        <p style="font-size: 13px; color: var(--ink-muted); margin-bottom: 12px;"><?= amankanTeks($hasilMenu['deskripsi']) ?></p>
+
+                        <?php if (!empty($hasilMenu['data'])): ?>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                                <?php foreach ($hasilMenu['data'] as $label => $val): ?>
+                                    <div style="background: var(--canvas); border: 1px solid var(--line-subtle); border-radius: var(--radius-sm); padding: 10px 14px;">
+                                        <div style="font-size: 11px; font-weight: 600; color: var(--ink-muted); text-transform: uppercase;"><?= amankanTeks($label) ?></div>
+                                        <div style="font-size: 18px; font-weight: 700; color: var(--ink-primary);"><?= amankanTeks($val) ?></div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($hasilMenu['list'])): ?>
+                            <ul style="font-size: 13px; color: var(--ink-secondary); padding-left: 20px; margin-top: 8px;">
+                                <?php foreach ($hasilMenu['list'] as $itemBuku): ?>
+                                    <li style="margin-bottom: 4px;"><?= amankanTeks($itemBuku) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             </div>

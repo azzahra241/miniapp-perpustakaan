@@ -115,43 +115,6 @@ $totalDenda     = hitungTotalDenda($koleksiBuku);
             </div>
         </section>
 
-        <!-- Profil Tim Pengembang -->
-        <section class="panel">
-            <div class="panel-header">
-                <span class="panel-title">Tim Pengembang Perpustakaan</span>
-                <span class="tag-status tag-neutral">Kelompok 7</span>
-            </div>
-            <div class="panel-body">
-                <div class="team-grid">
-                    <div class="team-card">
-                        <div class="team-card-name">Alfin Romi Setiawan</div>
-                        <div class="team-card-npm">NPM: 4524210009</div>
-                        <div class="team-card-role">Koordinator / Analis Sistem</div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-card-name">Alifian Revan Arnanta</div>
-                        <div class="team-card-npm">NPM: 4524210010</div>
-                        <div class="team-card-role">Pengembang Logika Prosedural</div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-card-name">Az-Zahra Putri</div>
-                        <div class="team-card-npm">NPM: 4524210018</div>
-                        <div class="team-card-role">Pengembang Pemodelan OOP</div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-card-name">Rakha Hafidz Fauzan</div>
-                        <div class="team-card-npm">NPM: 4524210080</div>
-                        <div class="team-card-role">Pengujian & Dokumentasi</div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-card-name">Putri Wahyu Dwi N.</div>
-                        <div class="team-card-npm">NPM: 4524210082</div>
-                        <div class="team-card-role">Desain Antarmuka & Integrasi</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <footer class="site-footer">

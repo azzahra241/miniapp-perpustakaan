@@ -1,8 +1,8 @@
 <?php
 /**
  * Data Koleksi Perpustakaan Pustaka Cendekia
- * Mengintegrasikan data dari miniapp-perpustakaan dan TUGAS_UTS.
- * Memenuhi Peta Kompetensi Pertemuan 3 (P3: Array & Tipe Data) dan P7 (Data Koleksi).
+ * [P3] Variabel, Array & Tipe Data
+ * [P7] Koleksi Data Inventaris
  */
 
 require_once __DIR__ . '/../classes/Buku.php';
@@ -15,9 +15,8 @@ $koleksiBuku = [
         'tahun'          => 2023,
         'rating'         => 4.8,
         'kategori'       => 'Teknologi & Komputer',
-        'dipinjam'       => true,
+        'status'         => 'Dipinjam', // Dapat diubah ke 'Tersedia', 'Dipinjam', atau 'Terlambat'
         'hari_terlambat' => 3,
-        'status'         => 'Terlambat',
         'stok'           => 3,
     ],
     [
@@ -27,9 +26,8 @@ $koleksiBuku = [
         'tahun'          => 2024,
         'rating'         => 4.9,
         'kategori'       => 'Teknologi & Komputer',
-        'dipinjam'       => false,
-        'hari_terlambat' => 0,
         'status'         => 'Tersedia',
+        'hari_terlambat' => 0,
         'stok'           => 4,
     ],
     [
@@ -39,9 +37,8 @@ $koleksiBuku = [
         'tahun'          => 2021,
         'rating'         => 4.7,
         'kategori'       => 'Ilmu Komputer',
-        'dipinjam'       => true,
-        'hari_terlambat' => 5,
         'status'         => 'Terlambat',
+        'hari_terlambat' => 5,
         'stok'           => 2,
     ],
     [
@@ -51,9 +48,8 @@ $koleksiBuku = [
         'tahun'          => 2020,
         'rating'         => 4.5,
         'kategori'       => 'Basis Data',
-        'dipinjam'       => false,
-        'hari_terlambat' => 0,
         'status'         => 'Tersedia',
+        'hari_terlambat' => 0,
         'stok'           => 5,
     ],
     [
@@ -63,9 +59,8 @@ $koleksiBuku = [
         'tahun'          => 2022,
         'rating'         => 4.6,
         'kategori'       => 'Kecerdasan Buatan',
-        'dipinjam'       => true,
-        'hari_terlambat' => 0,
         'status'         => 'Dipinjam',
+        'hari_terlambat' => 0,
         'stok'           => 2,
     ],
     [
@@ -75,9 +70,8 @@ $koleksiBuku = [
         'tahun'          => 2022,
         'rating'         => 4.3,
         'kategori'       => 'Sastra & Fiksi',
-        'dipinjam'       => false,
-        'hari_terlambat' => 0,
         'status'         => 'Tersedia',
+        'hari_terlambat' => 0,
         'stok'           => 3,
     ],
     [
@@ -87,9 +81,8 @@ $koleksiBuku = [
         'tahun'          => 2017,
         'rating'         => 4.8,
         'kategori'       => 'Sastra & Fiksi',
-        'dipinjam'       => true,
-        'hari_terlambat' => 4,
         'status'         => 'Terlambat',
+        'hari_terlambat' => 4,
         'stok'           => 1,
     ],
     [
@@ -99,9 +92,8 @@ $koleksiBuku = [
         'tahun'          => 1980,
         'rating'         => 4.9,
         'kategori'       => 'Sejarah & Sastra',
-        'dipinjam'       => true,
-        'hari_terlambat' => 0,
         'status'         => 'Dipinjam',
+        'hari_terlambat' => 0,
         'stok'           => 3,
     ],
     [
@@ -111,9 +103,8 @@ $koleksiBuku = [
         'tahun'          => 2020,
         'rating'         => 4.7,
         'kategori'       => 'Novel Terjemahan',
-        'dipinjam'       => true,
-        'hari_terlambat' => 10,
         'status'         => 'Terlambat',
+        'hari_terlambat' => 10,
         'stok'           => 2,
     ],
     [
@@ -123,9 +114,8 @@ $koleksiBuku = [
         'tahun'          => 2015,
         'rating'         => 3.9,
         'kategori'       => 'Novel Terjemahan',
-        'dipinjam'       => true,
-        'hari_terlambat' => 55,
         'status'         => 'Terlambat',
+        'hari_terlambat' => 55,
         'stok'           => 1,
     ],
     [
@@ -135,9 +125,8 @@ $koleksiBuku = [
         'tahun'          => 2005,
         'rating'         => 4.6,
         'kategori'       => 'Inspiratif & Edukasi',
-        'dipinjam'       => false,
-        'hari_terlambat' => 0,
         'status'         => 'Tersedia',
+        'hari_terlambat' => 0,
         'stok'           => 4,
     ],
     [
@@ -147,15 +136,34 @@ $koleksiBuku = [
         'tahun'          => 2019,
         'rating'         => 4.8,
         'kategori'       => 'Pengembangan Diri',
-        'dipinjam'       => false,
-        'hari_terlambat' => 0,
         'status'         => 'Tersedia',
+        'hari_terlambat' => 0,
         'stok'           => 5,
     ]
 ];
 
+// Sinkronisasi otomatis: memastikan status yang diubah langsung berdampak ke seluruh sistem
+foreach ($koleksiBuku as &$item) {
+    $st = ucfirst(strtolower(trim($item['status'] ?? 'Tersedia')));
+    if ($st === 'Tersedia') {
+        $item['status']         = 'Tersedia';
+        $item['dipinjam']       = false;
+        $item['hari_terlambat'] = 0;
+    } elseif ($st === 'Dipinjam') {
+        $item['status']         = 'Dipinjam';
+        $item['dipinjam']       = true;
+        $item['hari_terlambat'] = 0;
+    } elseif ($st === 'Terlambat') {
+        $item['status']         = 'Terlambat';
+        $item['dipinjam']       = true;
+        if (($item['hari_terlambat'] ?? 0) <= 0) {
+            $item['hari_terlambat'] = 1;
+        }
+    }
+}
+unset($item);
+
 // Inisialisasi variabel $daftarBuku berisi Array Objek Buku
-// Menjaga kompatibilitas 100% dengan Laporan.php dari TUGAS_UTS
 $daftarBuku = [];
 foreach ($koleksiBuku as $b) {
     $daftarBuku[] = Buku::fromArray($b);
